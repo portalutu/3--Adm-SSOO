@@ -1,0 +1,92 @@
+version: '3'
+
+volumes:
+  nextcloud:
+  db:
+
+networks:
+  nextcloud:
+
+services:
+  db:
+    image: mariadb:latest
+    restart: always
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW --innodb-file-per-table=1 --skip-innodb-read-only-compressed
+    volumes:
+      - db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=20041227
+      - MYSQL_PASSWORD=20041227
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=mysqluser
+    networks:
+      - nextcloud
+
+
+  redis:
+    image: redis:latest
+    restart: always
+    command: redis-server --requirepass 20041227
+    networks:
+      - nextcloud
+
+    
+  phpmyadmin:
+    container_name: phpmyadmin
+    restart: always
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8889:80
+      - 443:443
+    depends_on:
+      - db
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=500M
+      - PHP_UPLOAD_MAX_FILESIZE=500M
+      - PHP_POST_MAX_FILESIZE=500M
+    networks:
+      - nextcloud
+
+
+  app:
+    image: nextcloud:latest
+    restart: always
+    ports:
+      - 7777:80
+    links:
+      - db
+      - redis
+    volumes:
+      - nextcloud:/var/www/html
+    environment:
+      - MYSQL_PASSWORD=20041227
+      - MYSQL_DATABASE=db
+      - MYSQL_USER=mysqluser
+      - MYSQL_HOST=db
+      - REDIS_HOST_PASSWORD=20041227
+    depends_on:
+      - db
+      - redis
+    networks:
+      - nextcloud
+
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    ports:
+    - 1001:9980
+    restart: always
+    cap_add: 
+      - MKNOD    
+    networks:
+      - nextcloud    
+    environment:
+      - extra_params=--o:ssl.enable=false
+      - domain=192.168.1.100  # 192.168.2.111 | example.com            
+      - username=admin
+      - password=nj1hb4vf6c87
+      - dictionaries=es_ES en_EN
+      - TZ=America/Montevideo   
+    volumes:
+      - /etc/localtime:/etc/localtime:ro

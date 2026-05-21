@@ -3,7 +3,7 @@
 
 ## 1. Objetivos de aprendizaje
 
-Al finalizar la actividad, se espera que el estudiante pueda:
+Al finalizar la actividad, podrás:
 
 1. Descargar correctamente una imagen ISO de Ubuntu Server.
 2. Crear una máquina virtual en VirtualBox con recursos adecuados.
@@ -13,7 +13,7 @@ Al finalizar la actividad, se espera que el estudiante pueda:
 6. Configurar la interfaz de red de la VM en modo bridged.
 7. Asignar una IP fija usando Netplan.
 8. Verificar conectividad local y externa mediante comandos de red.
-9. Documentar el proceso realizado con capturas, comandos y conclusiones.
+9. Resolver problemas básicos durante la instalación y configuración del servidor.
 
 ---
 
@@ -45,7 +45,7 @@ Una distribución GNU/Linux es un sistema operativo completo que integra el kern
 
 ### 3.2. Justificación del uso de Ubuntu Linux en esta actividad
 
-Se utilizará Ubuntu Server porque permite trabajar con un entorno realista de administración de sistemas, pero accesible para estudiantes que se están iniciando en GNU/Linux, redes y soporte IT.
+Se utilizará Ubuntu Server porque permite trabajar con un entorno realista de administración de sistemas, pero accesible para quienes se están iniciando en GNU/Linux, redes y soporte IT.
 
 Las principales razones pedagógicas y técnicas son:
 
@@ -57,7 +57,7 @@ Las principales razones pedagógicas y técnicas son:
 - **Apropiado para enseñanza:** permite comenzar con tareas simples y avanzar luego hacia administración de servicios, scripting, seguridad y redes.
 - **Relación directa con el campo laboral:** muchos procedimientos aprendidos en Ubuntu Server son transferibles a otras distribuciones Linux usadas profesionalmente.
 
-Desde el punto de vista didáctico, Ubuntu Server permite que el estudiante comprenda cómo se instala, configura y administra un servidor real, sin depender de una interfaz gráfica y trabajando directamente con herramientas de consola.
+Desde el punto de vista didáctico, Ubuntu Server permite comprender cómo se instala, configura y administra un servidor real, sin depender de una interfaz gráfica y trabajando directamente con herramientas de consola.
 
 ### 3.3. Comparativa entre diferentes versiones de Ubuntu
 
@@ -65,7 +65,7 @@ Ubuntu se distribuye en varias ediciones o sabores, cada una orientada a un tipo
 
 | Versión / edición | Uso principal | Interfaz gráfica | Público objetivo | Ventajas | Limitaciones |
 |---|---|---:|---|---|---|
-| **Ubuntu Desktop** | Uso general en PC o notebook | Sí | Usuarios finales, estudiantes, oficinas | Fácil de usar, entorno gráfico completo, buena compatibilidad de hardware | Consume más recursos que una instalación de servidor |
+| **Ubuntu Desktop** | Uso general en PC o notebook | Sí | Usuarios finales, formación, oficinas | Fácil de usar, entorno gráfico completo, buena compatibilidad de hardware | Consume más recursos que una instalación de servidor |
 | **Ubuntu Server** | Servidores, servicios de red, infraestructura | No por defecto | Administradores de sistemas, soporte IT, laboratorios, servidores | Ligero, estable, orientado a consola, ideal para servicios y prácticas de administración | Requiere mayor uso de terminal |
 | **Ubuntu LTS** | Entornos que necesitan estabilidad prolongada | Depende de la edición | Empresas, educación, servidores, producción | Soporte extendido, actualizaciones de seguridad por varios años, recomendado para producción | Puede no incluir siempre las versiones más recientes de algunos paquetes |
 | **Ubuntu Interim / no LTS** | Pruebas, hardware reciente, software más nuevo | Depende de la edición | Usuarios avanzados, pruebas técnicas | Paquetes más recientes, útil para experimentar novedades | Menor tiempo de soporte, menos recomendable para servidores estables |
@@ -163,16 +163,6 @@ Ejemplo:
 ubuntu-24.04.x-live-server-amd64.iso
 ```
 
-### Evidencia solicitada
-
-Registrar en el informe:
-
-- Nombre exacto del archivo ISO descargado.
-- Versión de Ubuntu Server.
-- Captura de pantalla de la ISO descargada.
-
----
-
 ## 5. Parte 2: Crear la máquina virtual en VirtualBox
 
 ### Paso 1: Abrir VirtualBox
@@ -224,7 +214,7 @@ Seleccionar:
 - **Tamaño mínimo:** 20 GB.
 - **Tamaño recomendado:** 25 GB o más.
 - **Tipo:** VDI, si VirtualBox lo solicita.
-- **Reserva:** Dinámica, salvo indicación contraria del docente.
+- **Reserva:** Dinámica.
 
 ### Paso 6: Revisar configuración final
 
@@ -235,18 +225,6 @@ Antes de iniciar la VM, verificar:
 - RAM suficiente.
 - CPU asignada.
 - Disco creado.
-
-### Evidencia solicitada
-
-Registrar en el informe:
-
-- Nombre de la VM.
-- RAM asignada.
-- Cantidad de CPU asignadas.
-- Tamaño del disco virtual.
-- Captura de la configuración general de la VM.
-
----
 
 ## 6. Parte 3: Configurar la red de la VM antes de instalar
 
@@ -277,17 +255,8 @@ En **Nombre**, seleccionar la tarjeta de red física que está conectada a Inter
 En opciones avanzadas se recomienda:
 
 - **Tipo de adaptador:** dejar el valor predeterminado.
-- **Modo promiscuo:** denegar, salvo indicación del docente.
+- **Modo promiscuo:** denegar.
 - **Cable conectado:** activado.
-
-### Evidencia solicitada
-
-Registrar en el informe:
-
-- Captura de pantalla de la configuración de red en modo bridged.
-- Nombre del adaptador físico seleccionado.
-
----
 
 ## 7. Parte 4: Instalación manual de Ubuntu Server
 
@@ -338,7 +307,7 @@ Seleccionar:
 Ubuntu Server
 ```
 
-No seleccionar una versión mínima si el docente no lo indica.
+Usar la instalación estándar de Ubuntu Server.
 
 ### Paso 5: Configuración de red durante la instalación
 
@@ -364,7 +333,7 @@ Si la red no usa proxy, dejar vacío y continuar.
 
 ### Paso 7: Mirror de Ubuntu
 
-Aceptar el mirror propuesto por defecto, salvo indicación del docente.
+Aceptar el mirror propuesto por defecto.
 
 ### Paso 8: Particionado del disco
 
@@ -385,9 +354,9 @@ Confirmar la escritura de cambios en disco cuando el instalador lo solicite.
 Completar los datos solicitados. Ejemplo:
 
 ```text
-Your name: Estudiante UTU
+Your name: Usuario UTU
 Server name: ubuntu-lab
-Username: estudiante
+Username: usuario
 Password: una contraseña segura
 ```
 
@@ -411,7 +380,7 @@ No es obligatorio importar claves SSH en esta práctica.
 
 ### Paso 11: Selección de paquetes adicionales
 
-Si el instalador ofrece instalar paquetes o snaps adicionales, dejarlos sin seleccionar, salvo indicación del docente.
+Si el instalador ofrece instalar paquetes o snaps adicionales, dejarlos sin seleccionar.
 
 ### Paso 12: Finalizar instalación
 
@@ -434,7 +403,7 @@ Cuando el sistema lo indique, retirar la ISO virtual si VirtualBox no lo hace au
 Cuando aparezca la consola de login, ingresar:
 
 ```text
-usuario: estudiante
+usuario: usuario
 contraseña: la definida durante la instalación
 ```
 
@@ -458,7 +427,7 @@ Explicación:
 Ejecutar:
 
 ```bash
-sudo apt install -y curl wget nano vim net-tools htop openssh-server
+sudo apt install -y curl wget nano vim net-tools htop btop openssh-server
 ```
 
 Explicación breve:
@@ -466,18 +435,8 @@ Explicación breve:
 - `curl` y `wget`: descargan recursos desde la terminal.
 - `nano` y `vim`: editores de texto.
 - `net-tools`: incluye comandos clásicos como `ifconfig` y `netstat`.
-- `htop`: monitor de procesos.
+- `htop` / `btop`: monitor de procesos.
 - `openssh-server`: servicio SSH para administración remota.
-
-### Evidencia solicitada
-
-Registrar:
-
-- Captura del login exitoso.
-- Captura de la actualización del sistema.
-- Comando usado para instalar herramientas básicas.
-
----
 
 ## 9. Parte 6: Instalar Guest Tools / Guest Additions
 
@@ -560,17 +519,7 @@ sudo apt install -y virtualbox-guest-utils
 sudo reboot
 ```
 
-El docente indicará cuál método utilizar si hay problemas con la instalación desde la ISO.
-
-### Evidencia solicitada
-
-Registrar:
-
-- Comando utilizado para instalar dependencias.
-- Resultado de `lsmod | grep vbox`.
-- Problemas encontrados, si los hubo.
-
----
+Usar esta alternativa si hay problemas con la instalación desde la ISO.
 
 ## 10. Parte 7: Identificar la interfaz de red
 
@@ -618,16 +567,6 @@ Esto indica que el gateway o puerta de enlace es:
 ```text
 192.168.1.1
 ```
-
-### Evidencia solicitada
-
-Registrar:
-
-- Nombre de la interfaz de red.
-- IP obtenida inicialmente por DHCP.
-- Gateway detectado.
-
----
 
 ## 11. Parte 8: Planificar la IP fija
 
@@ -845,29 +784,14 @@ active (running)
 Desde una terminal del equipo anfitrión, ejecutar:
 
 ```bash
-ssh estudiante@192.168.1.50
+ssh usuario@192.168.1.50
 ```
 
-Reemplazar `estudiante` y `192.168.1.50` por los datos reales de la VM.
-
-### Evidencia solicitada
-
-Registrar capturas o copiar la salida de:
-
-```bash
-ip addr
-ip route
-ping -c 4 192.168.1.1
-ping -c 4 1.1.1.1
-ping -c 4 ubuntu.com
-systemctl status ssh
-```
-
----
+Reemplazar `usuario` y `192.168.1.50` por los datos reales de la VM.
 
 ## 14. Parte 11: Instalación desatendida con VirtualBox y Ubuntu Server
 
-Esta sección es de análisis y comparación. No es obligatorio completar una instalación desatendida funcional, salvo indicación del docente.
+Esta sección es de análisis y comparación. No es necesario completar una instalación desatendida funcional.
 
 ### 14.1. Instalación desatendida desde VirtualBox
 
@@ -890,7 +814,7 @@ Luego intenta automatizar parte del proceso.
 
 ### 14.3. Desventajas
 
-- El estudiante comprende menos decisiones internas de la instalación.
+- Se comprenden menos decisiones internas de la instalación.
 - Puede fallar según la ISO, versión de VirtualBox o sistema operativo.
 - No siempre deja la configuración exactamente como se necesita.
 - En servidores reales puede requerir archivos de configuración más avanzados.
@@ -907,7 +831,7 @@ autoinstall:
   version: 1
   identity:
     hostname: ubuntu-lab
-    username: estudiante
+    username: usuario
     password: "$6$hash-de-la-password"
   ssh:
     install-server: true
@@ -1027,98 +951,22 @@ sudo systemctl enable --now ssh
 
 ---
 
-## 17. Entrega de la actividad
-
-Cada estudiante o dupla deberá entregar un informe breve en formato PDF, Markdown o documento de texto, con los siguientes apartados:
-
-### 17.1. Datos generales
-
-- Nombre del estudiante o integrantes.
-- Grupo.
-- Fecha.
-- Nombre de la VM.
-
-### 17.2. Descripción del entorno
-
-- Versión de VirtualBox.
-- Versión de Ubuntu Server instalada.
-- RAM asignada.
-- CPU asignadas.
-- Tamaño del disco virtual.
-- Tipo de red configurada.
-
-### 17.3. Evidencias técnicas
-
-Incluir capturas o salidas de comandos:
-
-```bash
-ip addr
-ip route
-ping -c 4 192.168.1.1
-ping -c 4 1.1.1.1
-ping -c 4 ubuntu.com
-systemctl status ssh
-```
-
-### 17.4. Archivo Netplan final
-
-Copiar el contenido final del archivo YAML utilizado.
-
-Ejemplo:
-
-```yaml
-network:
-  version: 2
-  renderer: networkd
-  ethernets:
-    enp0s3:
-      dhcp4: no
-      addresses:
-        - 192.168.1.50/24
-      routes:
-        - to: default
-          via: 192.168.1.1
-      nameservers:
-        addresses:
-          - 1.1.1.1
-          - 8.8.8.8
-```
-
-### 17.5. Problemas encontrados
-
-Responder:
-
-1. ¿Qué problemas aparecieron durante la instalación o configuración?
-2. ¿Cómo se resolvieron?
-3. ¿Qué comando fue más útil para diagnosticar la red?
-4. ¿Qué diferencia hay entre DHCP e IP fija?
-5. ¿Por qué el modo bridged permite que la VM se comporte como otro equipo de la red?
-
-### 17.6. Conclusión personal
-
-Redactar un párrafo breve respondiendo:
-
-> ¿Qué aprendí al instalar y configurar un servidor Ubuntu en una máquina virtual?
-
----
-
-## 18. Criterios de evaluación
+## 17. Criterios de evaluación
 
 | Criterio | Excelente | Aceptable | En proceso |
 |---|---|---|---|
-| Creación de VM | VM correctamente creada, recursos adecuados y configuración documentada. | VM creada con mínimos errores o poca documentación. | VM incompleta o mal configurada. |
+| Creación de VM | VM correctamente creada, recursos adecuados y configuración coherente. | VM creada con mínimos errores. | VM incompleta o mal configurada. |
 | Instalación de Ubuntu Server | Instalación completa, usuario funcional y sistema actualizado. | Instalación funcional con alguna omisión menor. | Instalación incompleta o no funcional. |
-| Configuración de red | Bridged e IP fija correctamente configurados con Netplan. | Red funcional con errores menores de documentación. | Sin conectividad o configuración incorrecta. |
+| Configuración de red | Bridged e IP fija correctamente configurados con Netplan. | Red funcional con errores menores. | Sin conectividad o configuración incorrecta. |
 | Uso de comandos | Ejecuta y comprende los comandos principales. | Ejecuta comandos, pero con explicación parcial. | Requiere asistencia permanente. |
-| Evidencias | Presenta capturas, salidas y archivo Netplan completo. | Presenta evidencias parciales. | Evidencias insuficientes. |
 | Análisis y reflexión | Explica problemas, soluciones y aprendizajes con claridad. | Explica parcialmente el proceso. | No logra explicar lo realizado. |
-| Trabajo responsable | Trabaja con autonomía, orden y cuidado del entorno. | Trabaja con algunas intervenciones docentes. | Presenta dificultades de organización o seguimiento. |
+| Trabajo responsable | Trabaja con autonomía, orden y cuidado del entorno. | Trabaja con algunas consultas puntuales. | Presenta dificultades de organización o seguimiento. |
 
 ---
 
-## 19. Desafío opcional
+## 18. Desafío opcional
 
-Para estudiantes que finalicen antes, realizar una de las siguientes extensiones:
+Si finalizas antes, realizar una de las siguientes extensiones:
 
 ### Opción A: Cambiar el hostname
 
@@ -1180,13 +1028,13 @@ Explicar para qué sirve una instantánea en un entorno de laboratorio.
 
 ---
 
-## 20. Cierre de la actividad
+## 19. Cierre de la actividad
 
 Esta práctica permite comprender cómo se prepara un servidor GNU/Linux desde cero en un entorno seguro de virtualización. La instalación en una VM permite experimentar, equivocarse, corregir y repetir el proceso sin afectar el equipo físico.
 
 La configuración de red con IP fija es un paso fundamental para cualquier servidor, porque permite que otros equipos lo encuentren siempre en la misma dirección. Esto es necesario para servicios como SSH, web, bases de datos, archivos compartidos, DNS, DHCP, monitoreo y administración remota.
 
-Al finalizar, cada estudiante habrá construido un pequeño entorno de servidor que podrá reutilizarse para futuras prácticas de administración, scripting, redes, servicios y seguridad.
+Al finalizar, habrás construido un pequeño entorno de servidor que podrá reutilizarse para futuras prácticas de administración, scripting, redes, servicios y seguridad.
 
 ---
 
@@ -1196,7 +1044,7 @@ Al finalizar, cada estudiante habrá construido un pequeño entorno de servidor 
 
 En esta actividad vamos a instalar **Ubuntu Server** dentro de una máquina virtual creada con **Oracle VirtualBox**. Luego configuraremos la máquina para que pueda comunicarse con la red externa usando el modo **Adaptador puente / Bridged Adapter** y asignaremos una **dirección IP fija** mediante **Netplan**.
 
-El objetivo es que cada estudiante comprenda el proceso completo de instalación de un sistema operativo de servidor, desde la descarga de la imagen ISO hasta la configuración básica de red y la verificación de conectividad.
+El objetivo es comprender el proceso completo de instalación de un sistema operativo de servidor, desde la descarga de la imagen ISO hasta la configuración básica de red y la verificación de conectividad.
 
 Esta práctica simula una situación real de soporte IT o administración de sistemas: preparar un servidor GNU/Linux funcional, conectado a una red local y listo para ser administrado por consola.
 
@@ -1209,7 +1057,7 @@ Esta propuesta se alinea con el enfoque competencial del Marco Curricular Nacion
 - **Pensamiento computacional:** al seguir procedimientos técnicos, interpretar configuraciones y resolver errores de instalación o red.
 - **Pensamiento crítico:** al comparar decisiones de configuración, detectar fallas y justificar cambios.
 - **Pensamiento científico:** al observar resultados, probar hipótesis y verificar conectividad mediante comandos.
-- **Comunicación:** al registrar evidencias, explicar pasos realizados y documentar la configuración final.
+- **Comunicación:** al explicar pasos realizados, problemas encontrados y decisiones de configuración.
 - **Iniciativa y orientación a la acción:** al instalar, configurar, corregir y validar un sistema operativo funcional.
 - **Relación con los otros:** cuando la actividad se realiza en duplas o con apoyo entre compañeros.
 
@@ -1223,4 +1071,3 @@ Esta actividad se relaciona especialmente con:
 - Configuración de red.
 - Uso de terminal y comandos de administración.
 - Resolución de problemas básicos en entornos virtualizados.
-

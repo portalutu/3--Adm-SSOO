@@ -1,0 +1,56 @@
+version:
+  "3"
+services:
+  apache:
+    image: httpd:latest
+    container_name: LifeOffline
+    ports:
+    - '8081:80'
+    volumes:
+    - '/shared/website:/usr/local/apache2/htdocs:rw'
+    - '/shared:/shared:rw'
+    restart: on-failure
+    networks:
+      - lifeoffline
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:latest
+    volumes:
+      - ./db_data:/var/lib/mysql
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_PASSWORD=20041227
+      - MYSQL_DATABASE=atg
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=20041227
+    ports:
+      - 3306:3306
+    restart: on-failure
+    networks:
+      - lifeoffline
+
+
+  phpmyadmin:
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    ports:
+      - 8889:80
+      - 443:443
+    depends_on:
+      - mariadb
+    environment:
+      - PMA_ARBITRARY=1
+      - UPLOAD_LIMIT=200M
+      - PHP_UPLOAD_MAX_FILESIZE=200M
+      - PHP_POST_MAX_FILESIZE=200M
+    restart: on-failure
+    networks:
+      - lifeoffline
+
+volumes:
+  drupal_atg:
+  db_data:
+
+networks:
+  atg:
