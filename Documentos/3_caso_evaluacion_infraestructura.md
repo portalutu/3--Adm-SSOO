@@ -1,10 +1,7 @@
-# Guía docente — Clave de errores
+# Respuestas
 ## Caso de evaluación: Infraestructura Linux virtualizada
 
-> ⚠ Uso exclusivo docente — no distribuir al alumnado
-
 **Asignatura:** Administración de Sistemas Operativos  
-**Nivel:** 3.º año  
 **Total de errores:** 19 (10 de planificación + 9 de implementación)
 
 ---
