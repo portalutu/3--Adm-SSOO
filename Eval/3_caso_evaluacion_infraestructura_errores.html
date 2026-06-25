@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Caso de Evaluación — Infraestructura Linux Virtualizada</title>
+<style>
+:root {
+  --bg:       #08080f;
+  --bg-card:  #0d1117;
+  --bg-code:  #0b1120;
+  --cyan:     #00e5ff;
+  --green:    #39ff14;
+  --magenta:  #ff2d78;
+  --yellow:   #ffe600;
+  --purple:   #c04fff;
+  --text:     #c9d1d9;
+  --dim:      #4e5a67;
+  --border:   #1a2332;
+  --mono:     'Courier New', 'Lucida Console', monospace;
+  --sans:     'Segoe UI', system-ui, sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.75;
+}
+body::before {
+  content:'';
+  position:fixed;inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,.018) 2px,rgba(0,229,255,.018) 4px);
+  pointer-events:none;
+  z-index:9999;
+}
+
+.wrap{max-width:1120px;margin:0 auto;padding:40px 28px}
+
+/* ── HEADER ── */
+.hdr {
+  border:1px solid var(--cyan);
+  border-radius:4px;
+  padding:28px 36px;
+  margin-bottom:40px;
+  background:linear-gradient(135deg,#0d1117,#091628);
+  box-shadow:0 0 40px rgba(0,229,255,.12),inset 0 0 40px rgba(0,229,255,.03);
+  position:relative;
+}
+.hdr::before {
+  content:'> SISTEMA DE EVALUACIÓN // UTU';
+  position:absolute;top:-11px;left:22px;
+  background:var(--bg);padding:0 10px;
+  font-family:var(--mono);font-size:10px;
+  color:var(--cyan);letter-spacing:2px;
+}
+.hdr h1 {
+  font-family:var(--mono);font-size:21px;
+  color:var(--cyan);
+  text-shadow:0 0 22px rgba(0,229,255,.65);
+  margin-bottom:22px;letter-spacing:.5px;
+}
+.meta-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.meta-item{display:flex;flex-direction:column;gap:3px}
+.meta-lbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--magenta)}
+.meta-val{color:#e6edf3;font-size:14px}
+
+/* ── TYPOGRAPHY ── */
+hr{border:none;border-top:1px solid #1e2f3f;margin:32px 0}
+
+h2 {
+  font-family:var(--mono);font-size:17px;color:var(--cyan);
+  padding:13px 18px;margin:42px 0 18px;
+  border-left:3px solid var(--cyan);
+  background:rgba(0,229,255,.05);
+  text-shadow:0 0 14px rgba(0,229,255,.4);
+}
+h2::before{content:'## ';color:var(--magenta);opacity:.7}
+
+h3 {
+  font-family:var(--mono);font-size:14px;color:var(--yellow);
+  padding:7px 14px;margin:26px 0 11px;
+  border-left:2px solid var(--yellow);
+  background:rgba(255,230,0,.04);
+  text-shadow:0 0 10px rgba(255,230,0,.3);
+}
+h3::before{content:'// ';color:var(--dim)}
+
+p{margin:11px 0}
+strong{color:#e6edf3}
+ul,ol{padding-left:24px;margin:10px 0}
+li{margin:6px 0}
+li::marker{color:var(--magenta)}
+
+blockquote {
+  border-left:3px solid var(--magenta);
+  background:rgba(255,45,120,.06);
+  padding:11px 18px;margin:16px 0;
+  border-radius:0 4px 4px 0;
+  font-family:var(--mono);font-size:13px;color:#ff9eb0;
+}
+
+code {
+  font-family:var(--mono);
+  background:rgba(0,229,255,.08);
+  color:var(--cyan);padding:2px 6px;
+  border-radius:3px;font-size:13px;
+  border:1px solid rgba(0,229,255,.15);
+}
+pre {
+  background:var(--bg-code);
+  border:1px solid #1a2d3f;
+  border-left:3px solid var(--green);
+  border-radius:4px;padding:18px;
+  margin:14px 0;overflow-x:auto;
+  position:relative;tab-size:4;
+}
+pre::before {
+  content:attr(data-lang);
+  position:absolute;top:6px;right:10px;
+  font-size:10px;font-family:var(--mono);
+  color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+}
+pre code{background:none;border:none;color:var(--green);font-size:13px;padding:0}
+
+/* ── TABLES ── */
+.tw{overflow-x:auto;margin:18px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead tr{background:rgba(0,229,255,.07);border-bottom:2px solid var(--cyan)}
+th{font-family:var(--mono);color:var(--cyan);padding:9px 13px;text-align:left;font-size:11px;letter-spacing:1px;text-transform:uppercase}
+td{padding:8px 13px;border-bottom:1px solid #19293a;vertical-align:top}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+tr:hover{background:rgba(0,229,255,.04)}
+
+/* ── TEACHER SECTION ── */
+.teacher {
+  border:2px solid var(--magenta);
+  border-radius:4px;margin:50px 0 30px;
+  box-shadow:0 0 24px rgba(255,45,120,.12);
+}
+.teacher-hdr {
+  background:rgba(255,45,120,.08);
+  padding:14px 24px;
+  border-bottom:1px solid var(--magenta);
+  display:flex;justify-content:space-between;align-items:center;
+}
+.teacher-hdr h2{border:none;margin:0;padding:0;background:none;color:var(--magenta);text-shadow:0 0 14px rgba(255,45,120,.5);font-size:15px}
+.teacher-hdr h2::before{content:'🔒 '}
+.teacher-body{padding:24px;display:none}
+.teacher-body.open{display:block}
+.teacher-body h3{color:#ff8fa8;border-left-color:#ff8fa8}
+.teacher-body h3::before{content:'► '}
+
+.btn-toggle {
+  background:transparent;border:1px solid var(--magenta);
+  color:var(--magenta);font-family:var(--mono);font-size:11px;
+  padding:5px 13px;cursor:pointer;border-radius:3px;letter-spacing:1px;
+  transition:all .2s;
+}
+.btn-toggle:hover{background:rgba(255,45,120,.15);box-shadow:0 0 10px rgba(255,45,120,.3)}
+
+/* ── FORM SECTION ── */
+.form-wrap {
+  border:1px solid var(--purple);
+  border-radius:4px;margin:50px 0;
+  box-shadow:0 0 24px rgba(192,79,255,.1);
+}
+.form-hdr {
+  background:rgba(192,79,255,.08);
+  padding:18px 24px;
+  border-bottom:1px solid var(--purple);
+}
+.form-hdr h2{color:var(--purple);border-left-color:var(--purple);background:rgba(192,79,255,.06);text-shadow:0 0 14px rgba(192,79,255,.5);margin:0}
+.form-hdr h2::before{content:'📝 '}
+
+.student-grid {
+  padding:20px 24px;
+  border-bottom:1px solid var(--border);
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;
+}
+.fg{display:flex;flex-direction:column;gap:5px}
+.flbl{font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--purple)}
+.finput {
+  background:rgba(192,79,255,.05);
+  border:1px solid rgba(192,79,255,.3);
+  border-radius:3px;color:#e6edf3;
+  font-family:var(--sans);font-size:14px;
+  padding:7px 11px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.finput:focus{outline:none;border-color:var(--purple);box-shadow:0 0 8px rgba(192,79,255,.3)}
+.finput option{background:#0d1117;color:#e6edf3}
+
+.form-tbl-wrap{padding:20px 24px}
+.form-hint{color:var(--dim);font-size:12px;font-family:var(--mono);margin-bottom:14px}
+
+.ftbl{width:100%;border-collapse:collapse}
+.ftbl thead tr{background:rgba(192,79,255,.1);border-bottom:2px solid var(--purple)}
+.ftbl th{font-family:var(--mono);color:var(--purple);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:9px 8px}
+.ftbl td{padding:6px 5px;border-bottom:1px solid #19293a;vertical-align:top}
+.ftbl tr:nth-child(even){background:rgba(192,79,255,.02)}
+.ftbl tr:hover{background:rgba(192,79,255,.04)}
+
+.rnum{font-family:var(--mono);color:var(--purple);font-weight:bold;font-size:13px;text-align:center;width:30px}
+.ftbl .finput{font-size:12px;padding:5px 8px}
+.ftbl select.finput{cursor:pointer;width:100%}
+.ftbl textarea.finput{resize:vertical;min-height:58px;width:100%;line-height:1.5}
+
+.print-bar {
+  padding:18px 24px;
+  border-top:1px solid var(--border);
+  display:flex;justify-content:flex-end;gap:12px;align-items:center;
+}
+.print-hint{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.btn-print {
+  background:rgba(0,229,255,.08);
+  border:1px solid var(--cyan);color:var(--cyan);
+  font-family:var(--mono);font-size:12px;
+  padding:9px 22px;cursor:pointer;border-radius:3px;
+  letter-spacing:2px;text-transform:uppercase;
+  transition:all .2s;
+}
+.btn-print:hover{background:rgba(0,229,255,.18);box-shadow:0 0 16px rgba(0,229,255,.35)}
+
+footer{text-align:center;padding:28px;font-family:var(--mono);font-size:11px;color:var(--dim);letter-spacing:2px;border-top:1px solid var(--border);margin-top:50px}
+
+/* ── PRINT ── */
+@media print {
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body::before{display:none}
+  body{background:#fff;color:#111;font-size:11.5px;line-height:1.6}
+  .wrap{max-width:100%;padding:10px}
+  .hdr{background:#f0f0f0!important;border-color:#555;box-shadow:none;color:#000}
+  .hdr::before,.hdr h1,.meta-lbl,.meta-val{color:#000!important;text-shadow:none!important}
+  .meta-lbl{color:#555!important}
+  h2{color:#000!important;background:#e8e8e8!important;border-left-color:#333!important;text-shadow:none!important}
+  h2::before{color:#666!important}
+  h3{color:#000!important;background:#f0f0f0!important;border-left-color:#666!important;text-shadow:none!important}
+  h3::before{color:#666!important}
+  pre{background:#f5f5f5!important;border-color:#ccc!important;border-left-color:#666!important}
+  pre code{color:#222!important}
+  code{background:#f0f0f0!important;color:#333!important;border-color:#ccc!important}
+  thead tr{background:#e0e0e0!important;border-bottom-color:#333!important}
+  th{color:#000!important}
+  td{border-bottom-color:#ddd!important}
+  tr:nth-child(even){background:#f9f9f9!important}
+  tr:hover{background:transparent!important}
+  blockquote{background:#f5f5f5!important;border-left-color:#666!important;color:#333!important}
+  .teacher{display:none!important}
+  .form-wrap{border-color:#555!important;box-shadow:none!important}
+  .form-hdr{background:#e8e8e8!important;border-bottom-color:#555!important}
+  .form-hdr h2{color:#000!important;background:none!important;text-shadow:none!important;border:none!important;padding:0!important;margin:0 0 4px!important}
+  .form-hdr h2::before{display:none}
+  .flbl{color:#444!important}
+  .finput{background:#fff!important;border-color:#aaa!important;color:#000!important}
+  .ftbl thead tr{background:#e0e0e0!important}
+  .ftbl th{color:#000!important}
+  .rnum{color:#333!important}
+  .ftbl td{border-bottom-color:#ccc!important}
+  .btn-print,.print-bar,.btn-toggle{display:none!important}
+  footer{color:#666!important;border-top-color:#ddd!important}
+  tr{page-break-inside:avoid}
+  .ftbl td textarea.finput{min-height:42px!important}
+  h2,h3,p{orphans:3;widows:3}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <h1>Caso de evaluación: Infraestructura Linux virtualizada con errores</h1>
+  <div class="meta-grid">
+    <div class="meta-item"><span class="meta-lbl">Asignatura</span><span class="meta-val">Administración de Sistemas Operativos</span></div>
+    <div class="meta-item"><span class="meta-lbl">Nivel</span><span class="meta-val">3.º año</span></div>
+    <div class="meta-item"><span class="meta-lbl">Modalidad</span><span class="meta-val">Individual o en duplas</span></div>
+    <div class="meta-item"><span class="meta-lbl">Tiempo estimado</span><span class="meta-val">90 minutos</span></div>
+  </div>
+</div>
+
+<!-- CONSIGNA -->
+<h2>Consigna general</h2>
+<p>La empresa <strong>TecnInutil SRL</strong> fue contratada para diseñar e implementar una infraestructura de servidores Linux virtualizada para su cliente <strong>Comercial del Sur</strong>, una empresa mediana con una red local de 30 equipos.</p>
+<p>La infraestructura debía incluir tres servidores corriendo en VirtualBox sobre un equipo con Windows 11 como sistema anfitrión:</p>
+<div class="tw"><table>
+  <thead><tr><th>Servidor</th><th>Función</th><th>Software principal</th></tr></thead>
+  <tbody>
+    <tr><td><code>SRV-BD</code></td><td>Base de datos relacional</td><td>MySQL Server</td></tr>
+    <tr><td><code>SRV-WEB</code></td><td>Servidor web</td><td>Apache HTTP Server</td></tr>
+    <tr><td><code>SRV-SMB</code></td><td>Servidor de archivos compartidos</td><td>Samba</td></tr>
+  </tbody>
+</table></div>
+<p>TecnInutil SRL entregó a su cliente un documento de planificación y un registro de implementación. Sin embargo, el proyecto presentó múltiples fallas desde el principio.</p>
+<p><strong>Tu tarea</strong> es analizar la documentación producida por TecnInutil SRL e identificar los errores cometidos, explicando en cada caso qué está mal, por qué es un problema y cómo debería corregirse.</p>
+<p>Etica de IA: Se permite el uso de IA como herramienta de consulta puntual, pero las justificaciones, explicaciones y correcciones que figuren en el formulario deberán ser elaboradas por los integrantes del grupo con sus propias palabras.</p>
+
+<hr>
+
+<!-- PARTE A -->
+<h2>Parte A — Documento de planificación de TecnInutil SRL</h2>
+<blockquote>El siguiente documento fue entregado por TecnInutil SRL como plan técnico previo a la implementación. Contiene <strong>10 errores conceptuales</strong>. Identificalos, explicalos y proponé la corrección adecuada.</blockquote>
+
+<h3>A.1. Descripción del entorno físico</h3>
+<p>El equipo anfitrión donde se ejecutarán las VMs tiene las siguientes características:</p>
+<div class="tw"><table>
+  <thead><tr><th>Recurso</th><th>Valor</th></tr></thead>
+  <tbody>
+    <tr><td>Sistema operativo</td><td>Windows 11 Pro</td></tr>
+    <tr><td>RAM total</td><td>16 GB</td></tr>
+    <tr><td>Procesador</td><td>Intel Core i5 (4 núcleos)</td></tr>
+    <tr><td>Disco</td><td>256 GB SSD partición única (C:\)</td></tr>
+    <tr><td>VirtualBox</td><td>7.0</td></tr>
+  </tbody>
+</table></div>
+
+<h3>A.2. Tabla de recursos planificados para cada VM</h3>
+<div class="tw"><table>
+  <thead><tr><th>Parámetro</th><th>SRV-BD</th><th>SRV-WEB</th><th>SRV-SMB</th></tr></thead>
+  <tbody>
+    <tr><td>Sistema operativo</td><td>Ubuntu Desktop 22.04 LTS</td><td>Ubuntu 23.10</td><td>Ubuntu Server 22.04 LTS</td></tr>
+    <tr><td>RAM asignada</td><td>6 GB</td><td>4 GB</td><td>4 GB</td></tr>
+    <tr><td>CPU (núcleos)</td><td>2</td><td>2</td><td>1</td></tr>
+    <tr><td>Disco virtual</td><td>8 GB dinámico (VDI)</td><td>25 GB dinámico (VDI)</td><td>25 GB dinámico (VDI)</td></tr>
+    <tr><td>Adaptador de red</td><td>NAT</td><td>NAT</td><td>NAT</td></tr>
+    <tr><td>Asignación de IP</td><td>DHCP automático</td><td>DHCP automático</td><td>Fija: 192.168.1.30/24</td></tr>
+    <tr><td>Hostname</td><td>servidor</td><td>servidor</td><td>servidor</td></tr>
+    <tr><td>Ruta de almacenamiento</td><td>C:\Users\Administrador\Documentos\VMs\</td><td>C:\Users\Administrador\Documentos\VMs\</td><td>C:\Users\Administrador\Documentos\VMs\</td></tr>
+  </tbody>
+</table></div>
+
+<h3>A.3. Procedimiento de creación de las VMs</h3>
+<ol>
+  <li>Crear <strong>SRV-BD</strong> desde cero usando la ISO de Ubuntu Desktop 22.04 LTS.</li>
+  <li>Crear <strong>SRV-WEB</strong> desde cero usando la ISO de Ubuntu 23.10.</li>
+  <li>Para crear <strong>SRV-SMB</strong>, copiar el archivo <code>.vdi</code> del disco de SRV-WEB usando el Explorador de archivos de Windows. Luego crear una nueva VM en VirtualBox y asignarle ese archivo copiado como disco duro.</li>
+</ol>
+
+<h3>A.4. Política de acceso y seguridad</h3>
+<ul>
+  <li>En todos los servidores se creará el usuario <code>admintech</code> con contraseña <code>123456</code>.</li>
+  <li>Se habilitará SSH en los tres servidores.</li>
+  <li>La contraseña del usuario root de MySQL también será <code>123456</code>, igual a la del sistema, para mayor facilidad.</li>
+  <li>El acceso a MySQL desde aplicaciones de red se realizará con el usuario root directamente.</li>
+</ul>
+
+<h3>A.5. Plan de puesta en producción</h3>
+<p>Una vez que los tres servidores estén configurados y los servicios instalados, se procederá a notificar al cliente para comenzar a utilizarlos. No se contempla ninguna etapa de prueba o punto de restauración previo. No se establece ningún plan de respaldo (backup) de los datos almacenados en los servidores ni de los archivos de configuración.</p>
+
+<hr>
+
+<!-- PARTE B -->
+<h2>Parte B — Registro de implementación de TecnInutil SRL</h2>
+<blockquote>El siguiente registro documenta los comandos ejecutados y archivos de configuración creados durante la implementación. Contiene <strong>9 errores en la ejecución</strong>. Identificalos, explicalos y proponé la corrección adecuada.</blockquote>
+
+<h3>B.1. Configuración de red — SRV-BD</h3>
+<p>El técnico configuró la IP estática de SRV-BD editando el archivo de Netplan. El archivo <code>/etc/netplan/00-installer-config.yaml</code> quedó de la siguiente manera:</p>
+<pre data-lang="yaml"><code>network:
+	version: 2
+	renderer: networkd
+	ethernets:
+		enp0s3:
+			dhcp4: no
+			addresses:
+				- 192.168.1.10/24
+			routes:
+				- to: default
+				  via: 192.168.1.1
+			nameservers:
+				addresses:
+					- 1.1.1.1
+					- 8.8.8.8</code></pre>
+<p>Luego el técnico ejecutó:</p>
+<pre data-lang="bash"><code>sudo netplan apply</code></pre>
+
+<h3>B.2. Instalación y configuración de MySQL — SRV-BD</h3>
+<p>El técnico ejecutó los siguientes comandos:</p>
+<pre data-lang="bash"><code>sudo apt update
+sudo apt download
+sudo apt install -y mysql-server
+sudo systemctl start mysql
+sudo systemctl enable mysql</code></pre>
+<p>Luego verificó que el servicio corriera con <code>sudo systemctl status mysql</code>. Al ver que estaba activo, consideró la instalación completa. No se ejecutó <code>mysql_secure_installation</code> ni se modificó ningún archivo de configuración de MySQL.</p>
+<p>El archivo <code>/etc/mysql/mysql.conf.d/mysqld.cnf</code> quedó con sus valores predeterminados, incluyendo la siguiente línea sin modificar:</p>
+<pre data-lang="ini"><code>bind-address            = 127.0.0.1</code></pre>
+
+<h3>B.3. Configuración de red — SRV-WEB</h3>
+<p>El archivo <code>/etc/netplan/00-installer-config.yaml</code> del servidor web quedó configurado de la siguiente manera:</p>
+<pre data-lang="yaml"><code>network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: no
+      addresses:
+        - 192.168.1.20/24
+      routes:
+        - to: default
+          via: 192.168.1.1
+      nameservers:
+        addresses:
+          - 1.1.1.1
+          - 8.8.8.8</code></pre>
+
+<h3>B.4. Instalación y configuración de Apache — SRV-WEB</h3>
+<p>El técnico ejecutó:</p>
+<pre data-lang="bash"><code>apt update
+sudo apt install -y apache2
+sudo systemctl start apache2
+sudo systemctl enable apache2</code></pre>
+<p>Probó desde el mismo servidor con <code>curl http://localhost</code> y vio la página de bienvenida de Apache. Consideró la instalación exitosa y pasó al siguiente servidor.</p>
+
+<h3>B.5. Configuración de red — SRV-SMB</h3>
+<p>El archivo <code>/etc/netplan/00-installer-config.yaml</code> del servidor SMB quedó de la siguiente manera:</p>
+<pre data-lang="yaml"><code>network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp0s3:
+      dhcp4: true
+      addresses:
+        - 192.168.1.30/24
+      routes:
+        - to: default
+          via: 192.168.1.1
+      nameservers:
+        addresses:
+          - 1.1.1.1
+          - 8.8.8.8</code></pre>
+
+<h3>B.6. Instalación y configuración de Samba — SRV-SMB</h3>
+<p>El técnico ejecutó:</p>
+<pre data-lang="bash"><code>sudo apt update
+sudo apt install -y samba
+sudo mkdir /srv/compartido
+sudo chmod 700 /srv/compartido
+sudo chown root:root /srv/compartido</code></pre>
+<p>Luego editó <code>/etc/samba/smb.conf</code> y agregó al final:</p>
+<pre data-lang="ini"><code>[global]
+   workgroup = WORKGROUP
+   server string = Servidor de Archivos TecnInutil
+
+[compartido]
+   path = /srv/compartido
+   browseable = yes
+   read only = no
+   guest ok = yes</code></pre>
+<p>Por último verificó con <code>sudo systemctl status smbd</code>. Al ver que estaba activo, dio la tarea por finalizada.</p>
+
+<!-- ── FORM ── -->
+<div class="form-wrap">
+  <div class="form-hdr">
+    <h2>Respuestas del grupo</h2>
+  </div>
+
+  <div class="student-grid">
+    <div class="fg">
+      <label class="flbl" for="nombre">Nombre y apellido</label>
+      <input class="finput" type="text" id="nombre" name="nombre" placeholder="Ingresá tu nombre completo">
+    </div>
+    <div class="fg">
+      <label class="flbl" for="fecha">Fecha</label>
+      <input class="finput" type="date" id="fecha" name="fecha">
+    </div>
+    <div class="fg">
+      <label class="flbl" for="dupla">Dupla (si aplica)</label>
+      <input class="finput" type="text" id="dupla" name="dupla" placeholder="Nombre del compañero/a">
+    </div>
+    <div class="fg">
+      <label class="flbl" for="curso">Curso / Grupo</label>
+      <input class="finput" type="text" id="curso" name="curso" placeholder="Ej: 3A">
+    </div>
+  </div>
+
+  <div class="form-tbl-wrap">
+    <p class="form-hint">Completá las 19 filas con los errores identificados. Seleccioná la parte y la categoría en los desplegables, luego describí el error y proponé su corrección.</p>
+    <div class="tw">
+    <table class="ftbl">
+      <thead>
+        <tr>
+          <th style="width:32px">#</th>
+          <th style="width:130px">Parte</th>
+          <th style="width:195px">Categoría del error</th>
+          <th>Descripción del error encontrado</th>
+          <th>Corrección propuesta</th>
+        </tr>
+      </thead>
+      <tbody id="formRows"></tbody>
+    </table>
+    </div>
+  </div>
+
+  <div class="print-bar">
+    <span class="print-hint">Usar Chrome o Edge para mejor resultado PDF</span>
+    <button class="btn-print" onclick="window.print()">⎙ &nbsp;Imprimir / Exportar PDF</button>
+  </div>
+</div>
+
+<footer>UTU — Administración de Sistemas Operativos &nbsp;|&nbsp; 3.º año &nbsp;|&nbsp; Caso de evaluación</footer>
+</div>
+
+<script>
+function toggleDoc(btn) {
+  var body = document.getElementById('teacherBody');
+  var open = body.classList.toggle('open');
+  btn.textContent = open ? '[ OCULTAR ]' : '[ MOSTRAR ]';
+}
+
+(function buildForm() {
+  var partes = ['— Parte —','Planificación (A)','Implementación (B)'];
+  var cats = [
+    '— Categoría —',
+    'Red / IP estática en servidores',
+    'VirtualBox / Modo de red (NAT vs Bridged)',
+    'VirtualBox / Recursos (RAM, CPU, disco)',
+    'VirtualBox / Almacenamiento y rutas',
+    'VirtualBox / Clonado y UUIDs de disco',
+    'VirtualBox / Snapshots y proceso',
+    'Sistema operativo / Elección de distribución o versión',
+    'Seguridad / Contraseñas débiles o ausentes',
+    'Servicio / No habilitado al inicio (systemd enable)',
+    'Permisos de archivos / chmod / chown',
+    'Configuración de servicio (Apache / MySQL / Samba)',
+    'Netplan / Sintaxis YAML (tabuladores)',
+    'Netplan / Nombre de interfaz de red',
+    'Netplan / Conflicto DHCP y dirección estática',
+    'Identificación de máquina / Hostname duplicado',
+    'Otro'
+  ];
+
+  var tbody = document.getElementById('formRows');
+  for (var i = 1; i <= 19; i++) {
+    var tr = document.createElement('tr');
+
+    var tdN = document.createElement('td');
+    tdN.className = 'rnum';
+    tdN.textContent = i;
+    tr.appendChild(tdN);
+
+    function mkSelect(opts, name) {
+      var s = document.createElement('select');
+      s.className = 'finput';
+      s.name = name;
+      opts.forEach(function(o) {
+        var opt = document.createElement('option');
+        opt.value = o.startsWith('—') ? '' : o;
+        opt.textContent = o;
+        s.appendChild(opt);
+      });
+      return s;
+    }
+    function mkTd(el) { var td = document.createElement('td'); td.appendChild(el); return td; }
+    function mkTextarea(name, ph) {
+      var ta = document.createElement('textarea');
+      ta.className = 'finput';
+      ta.name = name;
+      ta.placeholder = ph;
+      return ta;
+    }
+
+    tr.appendChild(mkTd(mkSelect(partes, 'parte_'+i)));
+    tr.appendChild(mkTd(mkSelect(cats,   'cat_'+i)));
+    tr.appendChild(mkTd(mkTextarea('desc_'+i, 'Dónde aparece, qué hace mal, qué consecuencia tiene...')));
+    tr.appendChild(mkTd(mkTextarea('corr_'+i, 'Cómo debería corregirse correctamente...')));
+    tbody.appendChild(tr);
+  }
+
+  var hoy = new Date();
+  var d = hoy.getFullYear()+'-'+String(hoy.getMonth()+1).padStart(2,'0')+'-'+String(hoy.getDate()).padStart(2,'0');
+  document.getElementById('fecha').value = d;
+})();
+</script>
+</body>
+</html>
