@@ -8,9 +8,9 @@
 
 ## 1. Fundamentación
 
-En esta actividad se instalará y configurará un servidor Ubuntu Server en VirtualBox utilizando una instalación minimalista. El objetivo es trabajar sobre un escenario cercano a la administración real de servidores: creación de una máquina virtual, configuración de red, mantenimiento inicial del sistema operativo, revisión de archivos de configuración, control de servicios y despliegue de aplicaciones mediante contenedores.
+En esta actividad instalarás y configurarás un servidor Ubuntu Server en VirtualBox utilizando una instalación minimalista. Trabajarás sobre un escenario cercano a la administración real de servidores: creación de una máquina virtual, configuración de red, mantenimiento inicial del sistema operativo, revisión de archivos de configuración, control de servicios y despliegue de aplicaciones mediante contenedores.
 
-La práctica se vincula directamente con la administración de sistemas operativos desde consola y con el uso de máquinas virtuales y contenedores para resolver necesidades de infraestructura. Se espera que cada estudiante no solo ejecute comandos, sino que comprenda qué modifica cada paso, cómo verificar el resultado y qué evidencias debe conservar para justificar técnicamente su trabajo.
+La práctica se vincula directamente con la administración de sistemas operativos desde consola y con el uso de máquinas virtuales y contenedores para resolver necesidades de infraestructura. Durante el trabajo no solo ejecutarás comandos: también deberás comprender qué modifica cada paso, cómo verificar el resultado y qué evidencias puedes conservar para justificar técnicamente tus decisiones.
 
 ## 2. Competencias abordadas
 
@@ -23,7 +23,7 @@ También se promueven competencias generales del MCN vinculadas al pensamiento c
 
 ## 3. Objetivos de aprendizaje
 
-Al finalizar la actividad, el estudiante deberá ser capaz de:
+Al finalizar la actividad, podrás:
 
 - Crear una máquina virtual en VirtualBox para ejecutar Ubuntu Server.
 - Instalar Ubuntu Server en modalidad minimalista.
@@ -36,11 +36,11 @@ Al finalizar la actividad, el estudiante deberá ser capaz de:
 - Explicar qué son Docker y Docker Compose, y reconocer casos de uso.
 - Instalar Docker, Docker Compose, Webmin y Portainer.
 - Desplegar servicios con `docker compose`: Apache con PHP8, Nginx, MariaDB, phpMyAdmin e IT-Tools.
-- Documentar evidencias técnicas del proceso realizado.
+- Registrar evidencias técnicas del proceso realizado.
 
 ## 4. Requisitos previos
 
-Antes de comenzar, cada estudiante deberá contar con:
+Antes de comenzar, deberás contar con:
 
 - VirtualBox instalado.
 - Imagen ISO de Ubuntu Server 24.04 LTS o versión LTS reciente.
@@ -50,7 +50,7 @@ Antes de comenzar, cada estudiante deberá contar con:
 
 ## 5. Escenario de trabajo
 
-Se instalará un servidor Ubuntu Server en una máquina virtual. El servidor tendrá una IP fija dentro de la red local o de la red NAT configurada en VirtualBox. Sobre ese servidor se instalarán herramientas de administración y luego se desplegarán varios servicios usando contenedores.
+Instalarás un servidor Ubuntu Server en una máquina virtual. El servidor tendrá una IP fija dentro de la red local o de la red NAT configurada en VirtualBox. Sobre ese servidor instalarás herramientas de administración y luego desplegarás varios servicios usando contenedores.
 
 Servicios finales esperados:
 
@@ -324,7 +324,7 @@ network:
           - 8.8.8.8
 ```
 
-Cada estudiante deberá adaptar:
+Deberás adaptar:
 
 - `enp0s3`: nombre real de su interfaz.
 - `192.168.1.50/24`: IP fija elegida.
@@ -900,7 +900,7 @@ Contenido:
 </head>
 <body>
   <h1>Nginx funcionando en Docker</h1>
-  <p>Servidor desplegado por estudiantes de 3.o EMT.</p>
+  <p>Servidor desplegado en la actividad de 3.o EMT.</p>
 </body>
 </html>
 ```
@@ -1206,9 +1206,9 @@ free -h
 systemctl --failed
 ```
 
-## 24. Evidencias de entrega
+## 24. Evidencias de verificación
 
-Cada estudiante deberá entregar un documento breve con capturas o salidas de terminal que demuestren:
+Durante la actividad, deberás verificar y conservar evidencia de los siguientes puntos:
 
 1. Máquina virtual creada en VirtualBox.
 2. Ubuntu Server instalado correctamente.
@@ -1229,11 +1229,11 @@ Cada estudiante deberá entregar un documento breve con capturas o salidas de te
 17. phpMyAdmin conectado a MariaDB.
 18. IT-Tools accesible desde navegador.
 19. Resultado de `docker compose ps`.
-20. Breve reflexión técnica: qué ventaja aporta Docker Compose frente a instalar todos los servicios directamente en el sistema operativo.
+20. Reflexión técnica breve: qué ventaja aporta Docker Compose frente a instalar todos los servicios directamente en el sistema operativo.
 
 ## 25. Preguntas de reflexión técnica
 
-Responder al final de la entrega:
+Responde estas preguntas para revisar tu comprensión técnica:
 
 1. ¿Por qué es importante verificar los datos recibidos por DHCP antes de configurar una IP fija?
 2. ¿Qué problema puede ocurrir si dos equipos usan la misma IP en la red?
@@ -1260,7 +1260,7 @@ Responder al final de la entrega:
 
 ## 27. Desafío opcional
 
-Quienes finalicen antes pueden realizar uno o más de los siguientes desafíos:
+Si finalizas antes, puedes realizar uno o más de los siguientes desafíos:
 
 - Crear una segunda base de datos en MariaDB desde phpMyAdmin.
 - Crear una página PHP que se conecte a MariaDB.
