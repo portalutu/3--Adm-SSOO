@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calculadora de requerimientos - Servidor Linux Docker</title>
+<style>
+  :root{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.45}
+  body{max-width:1050px;margin:0 auto;padding:24px;background:#f6f7f9;color:#17191c}
+  h1{margin-bottom:6px} .sub{margin-top:0;color:#555}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+  .card{background:white;border:1px solid #ddd;border-radius:12px;padding:18px}
+  label{display:block;font-weight:650;margin:10px 0 5px}
+  input,select{width:100%;box-sizing:border-box;padding:9px;border:1px solid #bbb;border-radius:7px}
+  button{margin-top:18px;padding:11px 16px;border:0;border-radius:8px;background:#222;color:#fff;font-weight:700;cursor:pointer}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{padding:10px;border-bottom:1px solid #ddd;text-align:left}
+  .result{font-size:1.08rem}.big{font-size:1.55rem;font-weight:800}
+  .note{font-size:.92rem;color:#555}
+  .warn{padding:10px;border-left:4px solid #777;background:#eee;margin-top:12px}
+  code{background:#eee;padding:2px 5px;border-radius:4px}
+</style>
+</head>
+<body>
+<h1>Calculadora de requerimientos de hardware</h1>
+<p class="sub">Estimador didáctico para servidores Ubuntu Server + Docker. No reemplaza pruebas de carga ni capacity planning real.</p>
+
+<div class="grid">
+  <section class="card">
+    <h2>Carga de trabajo</h2>
+    <label>Usuarios concurrentes estimados</label>
+    <input id="users" type="number" min="1" value="20">
+
+    <label>Aplicaciones web PHP/Laravel</label>
+    <input id="webapps" type="number" min="0" value="2">
+
+    <label>Bases de datos</label>
+    <input id="dbs" type="number" min="0" value="2">
+
+    <label>Contenedores auxiliares</label>
+    <input id="extras" type="number" min="0" value="3">
+
+    <label>Perfil de uso</label>
+    <select id="profile">
+      <option value="0.75">Laboratorio / aprendizaje</option>
+      <option value="1" selected>Pequeña producción</option>
+      <option value="1.35">Producción con margen</option>
+      <option value="1.7">Carga intensiva</option>
+    </select>
+  </section>
+
+  <section class="card">
+    <h2>Datos y retención</h2>
+    <label>Datos actuales (GB)</label>
+    <input id="data" type="number" min="1" value="20">
+
+    <label>Crecimiento mensual de datos (%)</label>
+    <input id="growth" type="number" min="0" value="10">
+
+    <label>Meses a dimensionar</label>
+    <input id="months" type="number" min="1" value="12">
+
+    <label>Días de backups locales</label>
+    <input id="retention" type="number" min="1" value="7">
+
+    <label>Backups completos por día</label>
+    <input id="backups" type="number" min="1" value="1">
+  </section>
+
+  <section class="card">
+    <h2>Opciones</h2>
+    <label><input id="cockpit" type="checkbox" checked style="width:auto"> Cockpit</label>
+    <label><input id="headroom" type="checkbox" checked style="width:auto"> Reservar 25% para SO/picos</label>
+    <label><input id="raid" type="checkbox" style="width:auto"> Estimar RAID1 (duplica disco físico)</label>
+    <label><input id="backupExternal" type="checkbox" checked style="width:auto"> Recomendar copia externa/off-site</label>
+    <button onclick="calc()">Calcular</button>
+  </section>
+</div>
+
+<section class="card result" style="margin-top:16px">
+  <h2>Resultado recomendado</h2>
+  <div id="summary"></div>
+  <table>
+    <tr><th>Recurso</th><th>Mínimo estimado</th><th>Recomendación</th></tr>
+    <tr><td>CPU</td><td id="cpuMin"></td><td id="cpuRec"></td></tr>
+    <tr><td>RAM</td><td id="ramMin"></td><td id="ramRec"></td></tr>
+    <tr><td>Disco útil</td><td id="diskMin"></td><td id="diskRec"></td></tr>
+    <tr><td>Disco físico</td><td id="diskPhysical"></td><td id="diskType"></td></tr>
+    <tr><td>Backup local estimado</td><td id="backupSize"></td><td id="backupAdvice"></td></tr>
+  </table>
+  <div id="explain" class="note"></div>
+</section>
+
+<script>
+function roundUp(n, step){return Math.ceil(n/step)*step}
+function calc(){
+  const users=+document.getElementById('users').value||1;
+  const webapps=+document.getElementById('webapps').value||0;
+  const dbs=+document.getElementById('dbs').value||0;
+  const extras=+document.getElementById('extras').value||0;
+  const profile=+document.getElementById('profile').value;
+  const data=+document.getElementById('data').value||1;
+  const growth=(+document.getElementById('growth').value||0)/100;
+  const months=+document.getElementById('months').value||1;
+  const retention=+document.getElementById('retention').value||1;
+  const backups=+document.getElementById('backups').value||1;
+  const cockpit=document.getElementById('cockpit').checked;
+  const headroom=document.getElementById('headroom').checked;
+  const raid=document.getElementById('raid').checked;
+  const external=document.getElementById('backupExternal').checked;
+
+  // Fórmulas deliberadamente simples y visibles para uso educativo.
+  let cpu = (1 + webapps*0.7 + dbs*0.8 + extras*0.18 + users/35) * profile;
+  let ram = (1.5 + webapps*0.65 + dbs*1.25 + extras*0.18 + users*0.035 + (cockpit?0.25:0)) * profile;
+  if(headroom){cpu*=1.25; ram*=1.25}
+
+  const futureData=data*Math.pow(1+growth,months);
+  const imagesAndLogs=12 + webapps*3 + dbs*2 + extras*1.2;
+  const localBackup=futureData*retention*backups*0.65; // aproximación por compresión
+  let disk=futureData + imagesAndLogs + localBackup;
+  if(headroom) disk*=1.25;
+
+  const cpuMin=Math.max(2,Math.ceil(cpu));
+  const cpuRec=Math.max(2,roundUp(cpuMin,2));
+  const ramMin=Math.max(4,Math.ceil(ram));
+  const ramRec=Math.max(4,roundUp(ramMin,4));
+  const diskMin=Math.max(40,Math.ceil(disk));
+  const diskRec=roundUp(diskMin,50);
+  const physical=raid?diskRec*2:diskRec;
+
+  document.getElementById('cpuMin').textContent=cpuMin+" vCPU/hilos";
+  document.getElementById('cpuRec').textContent=cpuRec+" vCPU/hilos";
+  document.getElementById('ramMin').textContent=ramMin+" GB";
+  document.getElementById('ramRec').textContent=ramRec+" GB";
+  document.getElementById('diskMin').textContent=diskMin+" GB";
+  document.getElementById('diskRec').textContent=diskRec+" GB útiles";
+  document.getElementById('diskPhysical').textContent=physical+" GB"+(raid?" (2 × "+diskRec+" GB aprox.)":"");
+  document.getElementById('diskType').textContent="SSD/NVMe recomendado; separar backups si es posible";
+  document.getElementById('backupSize').textContent=Math.ceil(localBackup)+" GB";
+  document.getElementById('backupAdvice').textContent=external?"Mantener además una copia fuera del servidor (3-2-1).":"Activar una copia externa mejora la resiliencia.";
+  document.getElementById('summary').innerHTML=
+    '<p class="big">'+cpuRec+' vCPU · '+ramRec+' GB RAM · '+diskRec+' GB útiles</p>'+
+    '<div class="warn">La calculadora estima capacidad inicial. Para producción, medir CPU, RAM, I/O, latencia y crecimiento real y luego ajustar.</div>';
+  document.getElementById('explain').innerHTML=
+    '<p><strong>Datos proyectados:</strong> '+futureData.toFixed(1)+' GB luego de '+months+' meses. '+
+    '<strong>Imágenes/logs estimados:</strong> '+imagesAndLogs.toFixed(1)+' GB. '+
+    '<strong>Backups locales:</strong> '+localBackup.toFixed(1)+' GB.</p>'+
+    '<p>Modelo: base del SO + costo por aplicación web + costo por DB + auxiliares + concurrencia; luego se aplica el perfil y, si está marcado, 25% de margen.</p>';
+}
+calc();
+</script>
+</body>
+</html>
