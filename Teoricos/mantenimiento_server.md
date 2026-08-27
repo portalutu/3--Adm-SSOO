@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Mantenimiento de Ubuntu Server"
+---
+
+[← Volver al portal](../)
+
 # Mantenimiento de Ubuntu Server
 
 ---

@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Recetario Docker en Ubuntu Server"
+---
+
+[← Volver al portal](../)
+
 # Docker en Ubuntu Server
 
 ---

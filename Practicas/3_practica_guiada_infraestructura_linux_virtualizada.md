@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Práctica 3 — Infraestructura Linux virtualizada"
+---
+
+[← Volver al portal](../)
+
 # Práctica guiada: Infraestructura Linux virtualizada (SRV-BD, SRV-WEB, SRV-SMB)
 ---
 

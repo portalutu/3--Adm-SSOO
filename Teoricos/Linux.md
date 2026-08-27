@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Introducción a Linux"
+---
+
+[← Volver al portal](../)
+
 # Introducción a Linux para Administración de Sistemas Operativos
 
 Documento de apoyo para estudiantes del curso **Administración de Sistemas Operativos**.

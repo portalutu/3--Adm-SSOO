@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Linux Cheatsheet Unificado"
+---
+
+[← Volver al portal](../)
+
 # Linux Cheatsheet Unificado para Estudiantes
 
 > Guía rápida de referencia en terminal Linux, unificando los comandos contenidos en `comandos_linux.md` y `linux_cheatsheet.md`.  

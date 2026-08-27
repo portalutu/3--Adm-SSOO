@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Práctica 4 — Ubuntu Server minimalista y despliegue con Docker"
+---
+
+[← Volver al portal](../)
+
 # Actividad práctica: Ubuntu Server minimalista, administración inicial y despliegue de servicios con Docker
 
 **Curso:** 3.o EMT - Administración de Sistemas Operativos  

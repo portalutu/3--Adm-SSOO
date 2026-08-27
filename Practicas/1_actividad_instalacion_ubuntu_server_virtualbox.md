@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Práctica 1 — Instalación de Ubuntu Server en VirtualBox"
+---
+
+[← Volver al portal](../)
+
 # Actividad práctica: Instalación y configuración de Ubuntu Server en VirtualBox
 ---
 

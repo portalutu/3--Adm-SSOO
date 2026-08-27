@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Laboratorio integral: Servidor Linux con Docker"
+---
+
+[← Volver al portal](../)
+
 # Laboratorio integral: Servidor Linux con Docker para 3º EMT
 
 > **Plataforma de referencia:** Ubuntu Server LTS  

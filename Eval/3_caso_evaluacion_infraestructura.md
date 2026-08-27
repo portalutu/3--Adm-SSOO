@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Clave de respuestas — Caso de evaluación de infraestructura"
+---
+
+[← Volver al portal](../)
+
 # Respuestas
 ## Caso de evaluación: Infraestructura Linux virtualizada
 

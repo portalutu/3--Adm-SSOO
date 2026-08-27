@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Práctica 5 — Cálculo de requerimientos de VPS (caso TamboTrace)"
+---
+
+[← Volver al portal](../)
+
 # Cálculo de requerimientos de hardware y software para desplegar TamboTrace en un VPS
 
 ## Objetivo de esta práctica

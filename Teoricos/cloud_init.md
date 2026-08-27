@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Cloud-init en Ubuntu Server"
+---
+
+[← Volver al portal](../)
+
 # Cloud-init en Ubuntu Server
 
 ---

@@ -1,0 +1,12 @@
+title: "Administración de Sistemas Operativos — UTU 2026"
+description: "Portal de materiales del curso: teóricos, prácticas, evaluaciones y recetario Docker, 3º BT."
+theme: jekyll-theme-cayman
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+exclude:
+  - Teoricos/old
+  - README.md

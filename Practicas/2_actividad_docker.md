@@ -1,3 +1,10 @@
+---
+layout: default
+title: "Práctica 2 — Instalación y uso de Docker"
+---
+
+[← Volver al portal](../)
+
 # Actividad práctica: Instalación y uso de Docker en Ubuntu Server
 
 ---
